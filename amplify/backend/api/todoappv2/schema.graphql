@@ -1,0 +1,7 @@
+type TodoItem @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Title: String!
+  Description: String!
+  Status: Int
+  Date: AWSDate!
+}
