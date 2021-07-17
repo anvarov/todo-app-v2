@@ -1,7 +1,7 @@
 export const schema = {
     "models": {
-        "TodoItem": {
-            "name": "TodoItem",
+        "TodoModel": {
+            "name": "TodoModel",
             "fields": {
                 "id": {
                     "name": "id",
@@ -28,11 +28,11 @@ export const schema = {
                     "name": "Status",
                     "isArray": false,
                     "type": "Int",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
-                "Date": {
-                    "name": "Date",
+                "DueDate": {
+                    "name": "DueDate",
                     "isArray": false,
                     "type": "AWSDate",
                     "isRequired": true,
@@ -40,7 +40,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "TodoItems",
+            "pluralName": "TodoModels",
             "attributes": [
                 {
                     "type": "model",
@@ -58,6 +58,18 @@ export const schema = {
                                     "delete",
                                     "read"
                                 ]
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -67,5 +79,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "69cf01e6bb1e3caccea06bd3b486b7ae"
+    "version": "c8879ce9a2fbf1bc311f03797d40f340"
 };

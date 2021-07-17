@@ -1,0 +1,19 @@
+.wrapperDiv {
+    transform: scale(3);
+}
+
+.row {
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+ 
+}
+.spinner {
+    margin: auto;
+    animation: spin 2s cubic-bezier(0.4, 0, 1, 1) infinite;
+}
+
+@keyframes spin {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}

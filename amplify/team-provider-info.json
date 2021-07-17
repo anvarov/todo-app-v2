@@ -1,0 +1,15 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-todov2-staging-144341-authRole",
+      "UnauthRoleArn": "arn:aws:iam::032521565775:role/amplify-todov2-staging-144341-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::032521565775:role/amplify-todov2-staging-144341-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-todov2-staging-144341-deployment",
+      "UnauthRoleName": "amplify-todov2-staging-144341-unauthRole",
+      "StackName": "amplify-todov2-staging-144341",
+      "StackId": "arn:aws:cloudformation:us-east-2:032521565775:stack/amplify-todov2-staging-144341/37422b20-e644-11eb-94f5-0a895b109086",
+      "AmplifyAppId": "d2v59v677zqihs"
+    }
+  }
+}

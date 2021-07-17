@@ -4,12 +4,12 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
-export declare class TodoItem {
+export declare class TodoModel {
   readonly id: string;
   readonly Title: string;
   readonly Description: string;
-  readonly Status?: number;
-  readonly Date: string;
-  constructor(init: ModelInit<TodoItem>);
-  static copyOf(source: TodoItem, mutator: (draft: MutableModel<TodoItem>) => MutableModel<TodoItem> | void): TodoItem;
+  readonly Status: number;
+  readonly DueDate: string;
+  constructor(init: ModelInit<TodoModel>);
+  static copyOf(source: TodoModel, mutator: (draft: MutableModel<TodoModel>) => MutableModel<TodoModel> | void): TodoModel;
 }

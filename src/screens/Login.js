@@ -5,7 +5,7 @@ import AuthForm from '../components/AuthForm';
 
 export default function Login() {
   return (
-    <Row>
+    <Row className='p-5'>
       <Logo />
       <AuthForm variant="login" />
     </Row>

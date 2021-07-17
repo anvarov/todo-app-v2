@@ -3,24 +3,20 @@ import { Auth } from 'aws-amplify';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import useAsync from '../hooks/useAsync';
+import {useAuth} from '../context/AuthProvider'
 
-async function signUp() {
-}
-function AuthForm({ variant }) {
-	
-	const [password, setPassword] = useState('');
+function AuthForm({ onClick, onSubmitButton }) {
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
   const { setData, setError, error, status, data, run, reset } = useAsync();
-  
-	function handleSignUp(e) {
+	const {register, login, logout} = useAuth()
+
+  function handleSignUp(e) {
     e.preventDefault();
-		run(Auth.signUp(username, password))
-		console.log(data)
-    console.log(username, password);
-  }
-
-
+    run(onClick(username, password));
+		window.history.pushState('', '', '/dashboard')
+    };
 
   return (
     <Form>
@@ -45,14 +41,20 @@ function AuthForm({ variant }) {
       </Form.Group>
       <Form.Group
         className="mb-3"
-        controlId={variant === 'login' ? 'formRememberMe' : 'confirmPassword'}
+        controlId={true === 'login' ? 'formRememberMe' : 'confirmPassword'}
       >
-        {variant === 'login' ? (
-          <Form.Check type="checkbox" label="Remember me" />
+        {true === 'login' ? (
+          <></>
         ) : (
+          // <Form.Check type="checkbox" label="Remember me" />
           <>
             <Form.Label>Confirm Password</Form.Label>
-            <Form.Control type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}placeholder="Confirm Password" />
+            <Form.Control
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm Password"
+            />
           </>
         )}
       </Form.Group>
