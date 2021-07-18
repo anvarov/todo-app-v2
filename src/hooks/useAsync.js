@@ -13,6 +13,7 @@ function useSafeDispatch(dispatch) {
   }
 
 const defaultInitialState = {status: 'idle', data: null, error: null}
+
 function useAsync(initialState) {
   const initialStateRef = React.useRef({
     ...defaultInitialState,
@@ -62,10 +63,10 @@ function useAsync(initialState) {
 
   return {
     // using the same names that react-query uses for convenience
-    isIdle: status === 'idle',
-    isLoading: status === 'pending',
-    isError: status === 'rejected',
-    isSuccess: status === 'resolved',
+    // isIdle: status === 'idle',
+    // isLoading: status === 'pending',
+    // isError: status === 'rejected',
+    // isSuccess: status === 'resolved',
 
     setData,
     setError,

@@ -33,17 +33,13 @@ function AuthProvider(props) {
     data: user,
     status,
     error,
-    isLoading,
-    isIdle,
-    isError,
-    isSuccess,
     run,
     setData,
   } = useAsync()
 
-  React.useEffect(() => {
-    run(Auth.currentSession())
-  }, [run])
+  // React.useEffect(() => {
+  //   run(Auth.currentSession())
+  // }, [run])
 
   const login = React.useCallback(
     ({username, password}) => Auth.signIn({
@@ -68,23 +64,10 @@ function AuthProvider(props) {
   }, [setData])
 
   const value = React.useMemo(
-    () => ({user, login, logout, register}),
-    [login, logout, register, user],
+    () => ({user, login, logout, register, status, error}),
+    [login, logout, register, user, status, error],
   )
 
-  if (isLoading || isIdle) {
-    return <FullPageSpinner />
-  }
-
-  if (isError) {
-    return <FullPageErrorFallback error={error} />
-  }
-
-  if (isSuccess) {
-    return <AuthContext.Provider value={value} {...props} />
-  }
-
-  throw new Error(`Unhandled status: ${status}`)
   return <AuthContext.Provider value={value} {...props} />
 }
 
