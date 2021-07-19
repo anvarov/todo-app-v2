@@ -1,0 +1,6 @@
+{
+  "authSelections": "userPoolOnly",
+  "resourceName": "todoappv2",
+  "serviceType": "imported",
+  "region": "us-east-2"
+}

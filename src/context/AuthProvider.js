@@ -33,21 +33,29 @@ function AuthProvider(props) {
     data: user,
     status,
     error,
+    reset,
     run,
     setData,
+    setError,  
   } = useAsync()
-
-  // React.useEffect(() => {
+  // const getCurrentUser = React.useCallback(() => {
+  //   Auth.currentAuthenticatedUser()
+  // }, [Auth.currentAuthenticatedUser])
+  React.useEffect(() => {
+        run(Auth.currentUserInfo())
+    }, [run])
+    
+  // function getCurrentUser(){
   //   run(Auth.currentSession())
-  // }, [run])
-
+  // }
   const login = React.useCallback(
     ({username, password}) => Auth.signIn({
         username,
         password,
-    }).then(user=> setData(user)),
-    [setData],
+    }).then(user => setData(user), error => setError(error)),
+    [setData, setError],
   )
+
   const register = React.useCallback(
     ({username, password}) => Auth.signUp({
         username,
@@ -55,20 +63,21 @@ function AuthProvider(props) {
         attributes: {
           preferred_username: username, 
         }
-    }).then(user => setData(user)),
-    [setData],
+    }).then(user => setData(user), error => setError(error)),
+    [setData, setError],
   )
   const logout = React.useCallback(() => {
     Auth.signOut()    // queryCache.clear()
     setData(null)
-  }, [setData])
+    setError(null)
+  }, [setData, setError])
 
   const value = React.useMemo(
-    () => ({user, login, logout, register, status, error}),
-    [login, logout, register, user, status, error],
+    () => ({login, logout, reset, register, status, error, setError, setData}),
+    [login, logout, register, reset, status, error, setError, setData],
   )
 
-  return <AuthContext.Provider value={value} {...props} />
+  return <AuthContext.Provider value={{...value, user}} {...props} />
 }
 
 function useAuth() {

@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "todoappv2",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authtodoappv2",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

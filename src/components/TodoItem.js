@@ -5,16 +5,28 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
 import Tag from './Tag'
+import { DataStore } from '@aws-amplify/datastore';
+import { TodoModel } from '../models';
 
-function TodoItem({todo = {}}) {
-    return (
-        <li key='todokey'>
+function TodoItem() {
+    let todos
+    const fetchTodos = async () => {
+        todos = await DataStore.query(TodoModel);
+        console.log(todos);
+
+    }
+    React.useEffect(() => {
+        fetchTodos()
+    },[])
+
+    return todos ? todos.map(todo => (
+        <li key={todo.id}>
             <Row className='justify-content-space-between'>
                 <Col>
-                    <p>{'{todo title}'}</p>
+                    <p>{todo.title}</p>
                 </Col>
                 <Col className='d-flex justify-content-end'>
-                    <p>Due date: {'{todo due}'}</p>
+                    <p>Due date: {todo.dueDate}</p>
                 </Col>
             </Row>
             <Row className='mb-3'>
@@ -23,15 +35,15 @@ function TodoItem({todo = {}}) {
                         <Form.Label>
                             Description
                         </Form.Label>
-                        <Form.Control as='textarea' value='soe' readOnly />
+                        <Form.Control as='textarea' value={todo.description} readOnly />
                     </Form.Group>
                 </Form>
             </Row>
-            <Row>
+            {/* <Row>
                 <ul>
                     <Tag />
                 </ul>
-            </Row>
+            </Row> */}
             <Row>
                 <Col>
                     <Form>
@@ -39,16 +51,16 @@ function TodoItem({todo = {}}) {
                             <Form.Label>
                                 <Alert variant={true ? 'primary' : 'danger'}>
                                     Status: {'0%'} complete
-                                </Alert>    
+                                </Alert>
                             </Form.Label>
                         </Row>
-                        <Row>
+                        {/* <Row>
                             <Col className='d-flex'>
                                 <span><p>0%</p></span>
-                                <Form.Range className='mx-1'/>
+                                <Form.Range className='mx-1' />
                                 <span><p>100%</p></span>
                             </Col>
-                        </Row>
+                        </Row> */}
                     </Form>
                 </Col>
                 <Col className='d-flex justify-content-end align-items-center'>
@@ -56,7 +68,7 @@ function TodoItem({todo = {}}) {
                 </Col>
             </Row>
         </li>
-    )
+    )) : <p>No todos</p>
 }
 
 export default TodoItem

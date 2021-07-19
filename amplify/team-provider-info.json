@@ -1,0 +1,25 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-todoappv2-staging-235558-authRole",
+      "UnauthRoleArn": "arn:aws:iam::032521565775:role/amplify-todoappv2-staging-235558-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::032521565775:role/amplify-todoappv2-staging-235558-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-todoappv2-staging-235558-deployment",
+      "UnauthRoleName": "amplify-todoappv2-staging-235558-unauthRole",
+      "StackName": "amplify-todoappv2-staging-235558",
+      "StackId": "arn:aws:cloudformation:us-east-2:032521565775:stack/amplify-todoappv2-staging-235558/b2e566d0-e823-11eb-a20a-065274c16ff4",
+      "AmplifyAppId": "d1qlodyes6pnfi"
+    },
+    "categories": {
+      "auth": {
+        "todoappv2": {
+          "userPoolId": "us-east-2_bha9hvekA",
+          "userPoolName": "todo-app-v2",
+          "webClientId": "15hhqr58pk323lurdj65m1h7uo",
+          "nativeClientId": "15hhqr58pk323lurdj65m1h7uo"
+        }
+      }
+    }
+  }
+}

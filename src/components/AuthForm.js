@@ -5,13 +5,14 @@ import Button from 'react-bootstrap/Button';
 // import useAsync from '../hooks/useAsync';
 import { useAuth } from '../context/AuthProvider'
 import { useFormik } from 'formik'
-// import { useHistory } from 'react-router';
+import { useHistory } from 'react-router';
 import * as Yup from 'yup'
 import Alert from 'react-bootstrap/Alert';
 
 function AuthForm({ type }) {
-  const { register, login, error, status, user } = useAuth()
-  // const history = useHistory()
+  const [show, setShow] = React.useState(false)
+  const { register, login, error, status, reset, user } = useAuth()
+  const history = useHistory()
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -43,15 +44,13 @@ function AuthForm({ type }) {
         register(values)
       }
 
-      if (error) {
-        console.log(error)
-        console.log(status)
+      if (user) {
+        console.log('succes')
+        history.push('/dashboard')
       } else {
-        console.log(status)
-        console.log(user)
-        // history.push('/dashboard')
+        setShow(true)
       }
-    }
+    } 
   })
   // const [password, setPassword] = useState('');
   // const [confirmPassword, setConfirmPassword] = useState('');
@@ -70,7 +69,16 @@ function AuthForm({ type }) {
   // }
   return (
     <Form>
-      <Form.Group className="mb-3" controlId="formUsername">
+      {show && status === 'rejected' ? (
+        <Alert variant='danger' dismissible
+          onClose={() => {
+            setShow(false)
+            formik.resetForm()
+          }}>
+          {error?.message}
+        </Alert>
+      ) : null}
+      <Form.Group className="mb-3" controlId="username">
         <Form.Label>Username</Form.Label>
         <Form.Control
           name='username'
@@ -99,15 +107,20 @@ function AuthForm({ type }) {
           <Alert className='my-2' variant='danger'>{formik.errors.password}</Alert>
         ) : null}
       </Form.Group>
-      <Form.Group
-        className="mb-3"
-        controlId={type === 'login' ? 'formRememberMe' : 'confirmPassword'}
-      >
-        {type === 'login' ? (
-          null
-        ) : (
-          // <Form.Check type="checkbox" label="Remember me" />
-          <>
+      {type === 'login' ? (
+        null
+      ) : (
+        <>
+          <Form.Group
+            className='mb-3'
+            controlId='formEmail'
+          >
+            <Form.Label>Email</Form.Label>
+          </Form.Group>
+          <Form.Group
+            className="mb-3"
+            controlId='confirmPassword'
+          >
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control
               name='confirmPassword'
@@ -120,10 +133,11 @@ function AuthForm({ type }) {
             {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
               <Alert className='my-2' variant='danger'>{formik.errors.confirmPassword}</Alert>
             ) : null}
-          </>
-        )}
-      </Form.Group>
+          </Form.Group>
+        </>
+      )}
       <Button onClick={formik.handleSubmit}
+        disabled={formik.isSubmitting}
         variant="primary" type="submit">
         {type === 'login' ? 'Login' : 'Register'}
       </Button>

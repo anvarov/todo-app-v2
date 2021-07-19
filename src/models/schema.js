@@ -10,33 +10,49 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "Title": {
-                    "name": "Title",
+                "title": {
+                    "name": "title",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "Description": {
-                    "name": "Description",
+                "description": {
+                    "name": "description",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "Status": {
-                    "name": "Status",
+                "dueDate": {
+                    "name": "dueDate",
+                    "isArray": false,
+                    "type": "AWSDate",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "status": {
+                    "name": "status",
                     "isArray": false,
                     "type": "Int",
                     "isRequired": true,
                     "attributes": []
                 },
-                "DueDate": {
-                    "name": "DueDate",
+                "createdAt": {
+                    "name": "createdAt",
                     "isArray": false,
-                    "type": "AWSDate",
-                    "isRequired": true,
-                    "attributes": []
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
                 }
             },
             "syncable": true,
@@ -79,5 +95,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "c8879ce9a2fbf1bc311f03797d40f340"
+    "version": "13e176b5ce68be4fd4d97aee21082565"
 };
