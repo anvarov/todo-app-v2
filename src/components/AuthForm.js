@@ -43,7 +43,8 @@ function AuthForm({ type }) {
       } else {
         register(values)
       }
-
+      console.log(error)
+      console.log(user  )
       if (user) {
         console.log('succes')
         history.push('/dashboard')

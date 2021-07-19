@@ -10,6 +10,7 @@ import TodoItem from '../components/TodoItem'
 // import Button from 'react-bootstrap/Button'
 
 function Dashboard() {
+  const [filters, setFilters] = React.useState({})
   return (
     <Container>
       <Row className='my-3'>
@@ -26,12 +27,12 @@ function Dashboard() {
         </Accordion>
       </Row>
       <Row className='mb-4'>
-        <SearchInput />
+        <SearchInput filters={filters} setFilters={setFilters}/>
       </Row>
       <Row>
           <h3>Todos</h3>
           <ol className='ml-4'>
-						<TodoItem />
+						<TodoItem filters={filters}/>
 					</ol>
       </Row>
     </Container>
