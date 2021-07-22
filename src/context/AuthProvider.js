@@ -1,83 +1,99 @@
-
 import * as React from 'react'
-// import {queryCache} from 'react-query'
-// import * as auth from 'auth-provider'
-// import {client} from 'utils/api-client'
 import useAsync from '../hooks/useAsync'
 import { Auth } from 'aws-amplify';
-// import {setQueryDataForBook} from 'utils/books'
-// import {FullPageSpinner, FullPageErrorFallback} from 'components/lib'
 
-// async function bootstrapAppData() {
-//   let user = null
-
-//   const token = await auth.getToken()
-//   if (token) {
-//     const data = await client('bootstrap', {token})
-//     queryCache.setQueryData('list-items', data.listItems, {
-//       staleTime: 5000,
-//     })
-//     for (const listItem of data.listItems) {
-//       setQueryDataForBook(listItem.book)
-//     }
-//     user = data.user
-//   }
-//   return user
-// }
 
 const AuthContext = React.createContext()
 AuthContext.displayName = 'AuthContext'
 
 function AuthProvider(props) {
-  const {
-    data: user,
-    status,
-    error,
-    reset,
-    run,
-    setData,
-    setError,  
-  } = useAsync()
+  // useAsync(Auth.currentUserInfo())
+  const { data: user, error, status, setData, setError, reset } = useAsync()
+  // const {data: currentUser, error, status} = useAsync(Auth.currentUserInfo)
+  // const useLogin = ({ username, password }) =>
+  //   useAsync((username, password) => Auth.signIn({ username, password }), false)
+  // const useRegister = ({ username, password }) =>
+  //   useAsync((username, password) => Auth.signUp({
+  //     username,
+  //     password,
+  //     attributes: {
+  //       preferred_username: username,
+  //     }
+  //   }), false)
   // const getCurrentUser = React.useCallback(() => {
   //   Auth.currentAuthenticatedUser()
   // }, [Auth.currentAuthenticatedUser])
-  React.useEffect(() => {
-        run(Auth.currentUserInfo())
-    }, [run])
-    
+
+
+
   // function getCurrentUser(){
   //   run(Auth.currentSession())
   // }
-  const login = React.useCallback(
-    ({username, password}) => Auth.signIn({
-        username,
-        password,
-    }).then(user => setData(user), error => setError(error)),
-    [setData, setError],
-  )
+  // React.useEffect(() => {
+  //   run(Auth.currentSession())
+  // }, [run])
 
+  const login = React.useCallback(
+    ({ username, password }) => {
+      reset()
+      Auth.signIn({
+        username, password
+      }).then(
+        user => {
+          setData(user)
+          return user
+        }).catch(error => {
+          setError(error)
+          return Promise.reject(error)
+        })
+    }, [setData, setError, reset]
+  )
   const register = React.useCallback(
-    ({username, password}) => Auth.signUp({
+    ({ username, password }) => {
+      reset()
+      Auth.signUp({
         username,
         password,
         attributes: {
-          preferred_username: username, 
+          preferred_username: username,
         }
-    }).then(user => setData(user), error => setError(error)),
-    [setData, setError],
-  )
-  const logout = React.useCallback(() => {
-    Auth.signOut()    // queryCache.clear()
-    setData(null)
-    setError(null)
-  }, [setData, setError])
+      }).then(
+          user => {
+          setData(user)
+          return user
+        }
+      )
+        // console.log(user, 'from auth provid')
 
+        .catch(error => {
+          setError(error)
+          return Promise.reject(error)
+        })
+    }, [setData, setError, reset]
+  )
+  // const register = React.useCallback(
+  //   ({username, password}) => Auth.signUp({
+  //     username, 
+  //     password,
+  //     attributes: {
+  //       preferred_username: username
+  //     }
+  //   }), []
+  // )
+  // const logout = React.useCallback(() => {
+  //   Auth.signOut()    // queryCache.clear()
+  //   setData(null)
+  //   setError(null)
+  // }, [setData, setError])
+
+  // const value = React.useMemo(
+  //   () => ({ login, logout, reset, register, status, error, setError, setData }),
+  //   [login, logout, register, reset, status, error, setError, setData],
+  // )
   const value = React.useMemo(
-    () => ({login, logout, reset, register, status, error, setError, setData}),
-    [login, logout, register, reset, status, error, setError, setData],
-  )
+    () => ({ register, login, user, status, error }), [register, login, status, user, error])
 
-  return <AuthContext.Provider value={{...value, user}} {...props} />
+  return <AuthContext.Provider value={{ ...value, user }} {...props} />
 }
 
 function useAuth() {
@@ -97,5 +113,5 @@ function useAuth() {
 //   )
 // }
 
-export {AuthProvider, useAuth}
+export { AuthProvider, useAuth }
 

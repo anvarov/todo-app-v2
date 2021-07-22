@@ -2,17 +2,27 @@ import React from 'react';
 // import { Auth } from 'aws-amplify';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-// import useAsync from '../hooks/useAsync';
+import useAsync from '../hooks/useAsync';
 import { useAuth } from '../context/AuthProvider'
 import { useFormik } from 'formik'
 import { useHistory } from 'react-router';
 import * as Yup from 'yup'
 import Alert from 'react-bootstrap/Alert';
+// import {useQuery} from 'react-query'
+// import {Auth} from 'aws-amplify'
 
 function AuthForm({ type }) {
   const [show, setShow] = React.useState(false)
-  const { register, login, error, status, reset, user } = useAuth()
+  const { register, login, error, user, status } = useAuth()
+  // const { setError } = useAsync()
   const history = useHistory()
+  React.useEffect(() => {
+    if (user) {
+      history.push('/dashboard')
+    }
+  })
+  // const register = useQuery('register', Auth.signUp)
+  // const useLogin = (values) => useQuery('login', Auth.signIn(values))
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -39,19 +49,33 @@ function AuthForm({ type }) {
     }),
     onSubmit: values => {
       if (formik.values.type === 'login') {
-        login(values)
+        login(values).then(
+          user => user && history.push('/dashboard')
+        ).catch(
+          error =>
+            error && setShow(true)
+        )
       } else {
-        register(values)
+        register(values).then(
+          user => user && history.push('/dashboard')
+        ).catch(
+          error => {
+            console.log(error)
+            error && setShow(true)}
+        )
       }
-      console.log(error)
-      console.log(user  )
-      if (user) {
-        console.log('succes')
-        history.push('/dashboard')
-      } else {
-        setShow(true)
-      }
-    } 
+      // console.log(user  )
+
+      // if (user) {
+      //   console.log(user, 'user')
+      // if (error) {
+      //   setShow(true)
+      // }
+      // } else {
+      //   console.log(error)
+      //   setShow(true)
+      // }
+    }
   })
   // const [password, setPassword] = useState('');
   // const [confirmPassword, setConfirmPassword] = useState('');
@@ -70,6 +94,9 @@ function AuthForm({ type }) {
   // }
   return (
     <Form>
+      {/* {'status is ' + status}
+      {'error is ' + JSON.stringify(error)}
+      {'user is ' + JSON.stringify(user)} */}
       {show && status === 'rejected' ? (
         <Alert variant='danger' dismissible
           onClose={() => {
@@ -112,12 +139,7 @@ function AuthForm({ type }) {
         null
       ) : (
         <>
-          <Form.Group
-            className='mb-3'
-            controlId='formEmail'
-          >
-            <Form.Label>Email</Form.Label>
-          </Form.Group>
+          
           <Form.Group
             className="mb-3"
             controlId='confirmPassword'
