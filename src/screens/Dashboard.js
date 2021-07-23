@@ -1,40 +1,44 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import SearchInput from '../components/SearchInput';
 import Logo from '../components/Logo';
-import Accordion from 'react-bootstrap/Accordion'
-// import Form from 'react-bootstrap/Form'
-import TodoInput from '../components/TodoInput';
-import TodoItem from '../components/TodoItem'
-// import Button from 'react-bootstrap/Button'
+
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import { useAuth } from '../context/AuthProvider';
+import { useHistory } from 'react-router-dom';
+import Todos from './Todos'
 
 function Dashboard() {
-  const [filters, setFilters] = React.useState({})
+  const initialState = React.useRef({isLoading: true, currentUser: null});
+  const [{isLoading, currentUser}, dispatch] = React.useReducer((s, a) => ({...s, ...a}), initialState.current)
+  // const [filters, setFilters] = React.useState({})
+  const history = useHistory()
+  const {logout, getCurrentUser} = useAuth()
+  function handleLogout(){
+    dispatch(initialState.current)
+    logout()
+    history.push('/login')
+  }
+  React.useEffect(() => {
+    (async () => {
+      const user = await getCurrentUser()
+      dispatch({isLoading: false, currentUser: user})
+    }
+    )()
+  }, [getCurrentUser, dispatch])
   return (
     <Container>
-      <Row className='my-3'>
-        <Logo />
+      <Row className='my-3 align-items-center'>
+        <Col xs={12}>
+          <Logo />
+        </Col>
+        <Col className='d-flex align-items-center justify-content-end'>
+          <p className='my-auto mx-2'>Hello <strong>{!isLoading && currentUser.attributes.preferred_username}</strong></p>
+          <Button variant='outline-danger' onClick={handleLogout}>Logout</Button>
+        </Col>
       </Row>
-      <Row className='mb-3'>
-        <Accordion className='my-3' defaultActiveKey="0">
-          <Accordion.Item eventKey="0">
-            <Accordion.Header>Add Todo</Accordion.Header>
-            <Accordion.Body>
-              <TodoInput />
-            </Accordion.Body>
-          </Accordion.Item>
-        </Accordion>
-      </Row>
-      <Row className='mb-4'>
-        <SearchInput filters={filters} setFilters={setFilters}/>
-      </Row>
-      <Row>
-          <h3>Todos</h3>
-          <ol className='ml-4'>
-						<TodoItem filters={filters}/>
-					</ol>
-      </Row>
+      <Todos />
     </Container>
   );
 }

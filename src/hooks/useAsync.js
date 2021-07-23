@@ -14,7 +14,7 @@ function useSafeDispatch(dispatch) {
 
 const defaultInitialState = {status: 'idle', data: null, error: null}
 
-function useAsync(initialState) {
+function useAsync(initialState = {}) {
   const initialStateRef = React.useRef({
     ...defaultInitialState,
     ...initialState,

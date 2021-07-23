@@ -10,9 +10,13 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { DataStore } from '@aws-amplify/datastore';
 import { TodoModel } from '../models';
+import useAsync from '../hooks/useAsync';
+import {addTodo, TodoContext} from '../screens/Todos'
+
 
 function TodoInput() {
-
+  const {dispatch, filters} = React.useContext(TodoContext)
+  const {run, status, error} = useAsync()
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -28,14 +32,15 @@ function TodoInput() {
     }),
     onSubmit: 
       async () => {
-        await DataStore.save(
+        const todo = await DataStore.save(
           new TodoModel({
             "title": formik.values.title,
             "description": formik.values.description,
             "dueDate": formik.values.dueDate,
             "status": 0
-          })
-        );
+          }))
+        addTodo(dispatch, todo)
+
       }
   })
   return (

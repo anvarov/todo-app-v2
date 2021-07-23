@@ -9,7 +9,7 @@ export default function Login() {
   return (
     <Row className='p-5'>
       <Logo />
-      <AuthForm type="register" />
+      <AuthForm type="login" />
     </Row>
   );
 }
