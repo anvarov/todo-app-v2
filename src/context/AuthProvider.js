@@ -9,13 +9,13 @@ AuthContext.displayName = 'AuthContext'
 function AuthProvider(props) {
   const { data: user, error, status, reset, run } = useAsync()
 
-  const getCurrentUser = React.useCallback(() => {
-    return run(Auth.currentUserInfo())
-  }, [run])
+  // const getCurrentUser = React.useCallback(() => {
+  //   return run(Auth.currentUserInfo())
+  // }, [run])
 
-  // React.useEffect(() => {
-  //   getCurrentUser()
-  // }, [getCurrentUser])
+  React.useEffect(() => {
+    run(Auth.currentUserInfo())
+  }, [run])
 
   const login = React.useCallback(
     ({ username, password }) => {
@@ -44,9 +44,10 @@ function AuthProvider(props) {
 
 
   const value = React.useMemo(
-    () => ({ register, login, logout, user, status, error, getCurrentUser }), [register, logout, login, getCurrentUser, status, user, error])
+    () => ({ register, login, logout, user, status, error }), [register, logout, login, status, user, error]
+    )
 
-  return <AuthContext.Provider value={{ ...value, user }} {...props} />
+  return <AuthContext.Provider value={value} {...props} />
 }
 
 function useAuth() {
@@ -56,15 +57,6 @@ function useAuth() {
   }
   return context
 }
-
-// function useClient() {
-//   const {user} = useAuth()
-//   const token = user?.token
-//   return React.useCallback(
-//     (endpoint, config) => client(endpoint, {...config, token}),
-//     [token],
-//   )
-// }
 
 export { AuthProvider, useAuth }
 

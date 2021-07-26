@@ -1,21 +1,13 @@
 import React from 'react'
 import { useAuth } from '../context/AuthProvider'
 import { Route, Redirect } from 'react-router-dom'
-import { Auth } from 'aws-amplify'
 
 function PrivateRoute({ component: Component, ...rest }) {
-     let user = React.useRef()
-     React.useEffect(() => {
-         (async () => {
-             user.current = await Auth.currentAuthenticatedUser()
-         })()
-     })
-
-    // const {user} = useAuth()
-    console.log(user)
+    const {user, status} = useAuth()
+    
     return (
         <Route {...rest} render={props => (
-            user.current ? <Component {...props} /> :
+            user && (status === 'resolved' || status === 'idle') ? <Component {...props} /> :
                 <Redirect to='/login' />
         )} />
     )

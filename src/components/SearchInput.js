@@ -9,8 +9,20 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Alert from 'react-bootstrap/Alert'
 import * as Yup from 'yup'
+import { useTodos } from '../screens/Todos'
 
-function SearchInput({ filters, setFilters }) {
+
+function SearchInput() {
+    const {dispatch} = useTodos()
+    function handleSearch({searchTerm, status}){
+        console.log('inside handlesea')
+        dispatch({filters: {searchTerm, endDate: null, startDate: null, status}})
+    }
+    function handleCancel(){
+        showFilters(false); 
+        formik.resetForm();
+        dispatch({filters: {status: 0}})
+    }
     const formik = useFormik({
         initialValues: {
             status: 0,
@@ -23,8 +35,8 @@ function SearchInput({ filters, setFilters }) {
             endDate: Yup.date().required().min(Yup.ref('startDate', 'end date cannot be lower than end date'))
 
         }),
-        onSubmit: ({status, endDate, startDate}) => {
-            setFilters({status, endDate, startDate})
+        onSubmit: ({status, endDate, startDate, searchTerm}) => {
+            dispatch({filters:{status, endDate, startDate, searchTerm}})
             // showFilters(false)
         } 
     })
@@ -43,9 +55,8 @@ function SearchInput({ filters, setFilters }) {
                 />
                 {/* <InputGroup.Text id='searchIcon'> */}
                 <Button variant='outline-secondary' onClick={() => showFilters(state => !state)}>Filters</Button>
-                <Button variant='outline-primary' as='span'>
+                <Button variant='outline-primary' onClick={() => handleSearch(formik.values)} >
                     <AiOutlineSearch />
-
                 </Button>
                 {/* </InputGroup.Text> */}
 
@@ -57,7 +68,12 @@ function SearchInput({ filters, setFilters }) {
                             <Form.Group>
 
                                 <Form.Label>Status</Form.Label>
-                                <Form.Select>
+                                <Form.Select
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.status}
+                                name='status'
+                                >
                                     <option value={0}>Active</option>
                                     <option value={100}>Completed</option>
                                 </Form.Select>
@@ -98,7 +114,7 @@ function SearchInput({ filters, setFilters }) {
 
                         <Col xs={12} className={'d-flex justify-content-end'}>
                             <Button className='m-1' variant='outline-primary' onClick={() => formik.handleSubmit(formik.values)}>Apply</Button>
-                            <Button className='m-1' variant='outline-danger' onClick={() => showFilters(false)}>Cancel</Button>
+                            <Button className='m-1' variant='outline-danger' onClick={() => handleCancel()}>Cancel</Button>
                         </Col>
 
                     </Row>

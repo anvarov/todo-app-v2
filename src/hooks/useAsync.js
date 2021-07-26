@@ -19,7 +19,7 @@ function useAsync(initialState = {}) {
     ...defaultInitialState,
     ...initialState,
   })
-  const [{status, data, error}, setState] = React.useReducer(
+  const [state, setState] = React.useReducer(
     (s, a) => ({...s, ...a}),
     initialStateRef.current,
   )
@@ -70,11 +70,10 @@ function useAsync(initialState = {}) {
 
     setData,
     setError,
-    error,
-    status,
-    data,
     run,
     reset,
+    setState,
+    ...state
   }
 }
 

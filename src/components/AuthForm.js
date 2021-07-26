@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 // import useAsync from '../hooks/useAsync';
 import { useAuth } from '../context/AuthProvider'
 import { useFormik } from 'formik'
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, Redirect } from 'react-router-dom';
 import * as Yup from 'yup'
 import Alert from 'react-bootstrap/Alert';
 import Col from 'react-bootstrap/Col'
@@ -15,9 +15,14 @@ import Row from 'react-bootstrap/Row'
 
 function AuthForm({ type }) {
   const [show, setShow] = React.useState(false)
-  const { register, login, error, status } = useAuth()
+  const { register, login, error, status, user } = useAuth()
   const history = useHistory()
-
+  // React.useEffect(() => {
+  //   console.log(user, 'useeeffect')
+  //   if (user){
+  //     <Redirect to='/dashboard' />
+  //   }
+  // }, [user])
   function handleDemoLogin(e) {
     e.preventDefault()
     login({ username: 'demoUser', password: 123456 })
@@ -68,7 +73,7 @@ function AuthForm({ type }) {
     }
   })
 
-  return (
+  return user ? <Redirect to='/dashboard' /> : (
     <Form>
       {show && status === 'rejected' ? (
         <Alert variant='danger' dismissible

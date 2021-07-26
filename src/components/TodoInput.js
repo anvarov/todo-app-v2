@@ -10,13 +10,15 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { DataStore } from '@aws-amplify/datastore';
 import { TodoModel } from '../models';
-import useAsync from '../hooks/useAsync';
-import {addTodo, TodoContext} from '../screens/Todos'
-
+// import useAsync from '../hooks/useAsync';
+// import { addTodo, TodoContext } from '../screens/Todos'
+import { useTodos } from '../screens/Todos'
 
 function TodoInput() {
-  const {dispatch, filters} = React.useContext(TodoContext)
-  const {run, status, error} = useAsync()
+  const { todos,
+    filters,
+    error, setError, status, dispatch } = useTodos()
+  // const {run, status, error} = useAsync()
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -30,83 +32,88 @@ function TodoInput() {
       dueDate: Yup.date().required('Date is required'),
       status: Yup.number().required('Status is required')
     }),
-    onSubmit: 
+    onSubmit:
       async () => {
-        const todo = await DataStore.save(
-          new TodoModel({
-            "title": formik.values.title,
-            "description": formik.values.description,
-            "dueDate": formik.values.dueDate,
-            "status": 0
-          }))
-        addTodo(dispatch, todo)
+        dispatch({ status: 'pending' })
+        try {
+          const todo = await DataStore.save(
+            new TodoModel({
+              "title": formik.values.title,
+              "description": formik.values.description,
+              "dueDate": formik.values.dueDate,
+              "status": 0
+            }))
+          const copyTodos = [...todos]
+          copyTodos.push(todo)
+          formik.resetForm()
+          dispatch({ status: 'resolved', todos: copyTodos })
 
+        } catch (error) {
+          console.log(error)
+          setError({ error, status: 'rejected' })
+        }
       }
   })
+  // if (status === 'pending'){
+  //   return "Loading"
+  // }
   return (
     <Form>
-      <Row className="mb-3">
-        <Form.Group as={Col} controlId="title">
-          <Form.Label>Todo Title</Form.Label>
-          <Form.Control
-            name='title'
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.title}
-            type="text" placeholder="Todo title" />
-          {formik.touched.title && formik.errors.title ? (
-            <Alert className='my-2' variant='danger'>{formik.errors.title}</Alert>
-          ) : null}
-        </Form.Group>
-        <Form.Group as={Col}>
-          <Form.Label>Due date</Form.Label>
-          <Form.Control
-            name='dueDate'
-            value={formik.values.dueDate}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            type="date" placeholder="Due date" min={new Date().toISOString().slice(0, 10)} />
-          {formik.touched.dueDate && formik.errors.dueDate ? (
-            <Alert className='my-2' variant='danger'>{formik.errors.dueDate}</Alert>
-          ) : null}
-        </Form.Group>
-      </Row>
-      <Form.Group controlId="todoDescription" className="mb-4">
-        <Form.Label>Todo Description</Form.Label>
-        <Form.Control
-          name='description'
-          value={formik.values.description}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          as="textarea" rows="5" placeholder="Todo description" />
-        {formik.touched.description && formik.errors.description ? (
-          <Alert className='my-2' variant='danger'>{formik.errors.description}</Alert>
-        ) : null}
-      </Form.Group>
-      {/* <Row className='mb-4'>
-        <InputGroup>
-          <FormControl
-            aria-label="Add tag"
-          />
-          <Button variant="outline-secondary" id="addTagButton">
-            Add Tag
-          </Button>
-        </InputGroup>
-      </Row> */}
-      <Row className='justify-content-end'>
-        <Col md='auto'>
-          <Button 
-          onClick={formik.handleSubmit}
-          >
-            Add Todo
-          </Button>
-        </Col>
-        <Col md='auto'>
-          <Button variant='danger' onClick={formik.handleReset}>
-            Reset
-          </Button>
-        </Col>
-      </Row>
+      {status === 'pending' ? "Loading..." : (
+        <>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="title">
+              <Form.Label>Todo Title</Form.Label>
+              <Form.Control
+                name='title'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.title}
+                type="text" placeholder="Todo title" />
+              {formik.touched.title && formik.errors.title ? (
+                <Alert className='my-2' variant='danger'>{formik.errors.title}</Alert>
+              ) : null}
+            </Form.Group>
+            <Form.Group as={Col}>
+              <Form.Label>Due date</Form.Label>
+              <Form.Control
+                name='dueDate'
+                value={formik.values.dueDate}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                type="date" placeholder="Due date" min={new Date().toISOString().slice(0, 10)} />
+              {formik.touched.dueDate && formik.errors.dueDate ? (
+                <Alert className='my-2' variant='danger'>{formik.errors.dueDate}</Alert>
+              ) : null}
+            </Form.Group>
+          </Row>
+          <Form.Group controlId="todoDescription" className="mb-4">
+            <Form.Label>Todo Description</Form.Label>
+            <Form.Control
+              name='description'
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              as="textarea" rows="5" placeholder="Todo description" />
+            {formik.touched.description && formik.errors.description ? (
+              <Alert className='my-2' variant='danger'>{formik.errors.description}</Alert>
+            ) : null}
+          </Form.Group>
+          <Row className='justify-content-end'>
+            <Col md='auto'>
+              <Button
+                onClick={formik.handleSubmit}
+              >
+                Add Todo
+              </Button>
+            </Col>
+            <Col md='auto'>
+              <Button variant='danger' onClick={formik.handleReset}>
+                Reset
+              </Button>
+            </Col>
+          </Row>
+        </>)}
     </Form>
   );
 }
