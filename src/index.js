@@ -57,6 +57,9 @@ function App() {
             <Route path='/register'>
               <AuthFormScreen type='register' />
             </Route>
+            <Route exact path='/'>
+              <Dashboard />
+            </Route>
           </Switch>
         </Container>
       </AuthProvider>
