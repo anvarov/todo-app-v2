@@ -13,6 +13,7 @@ import { TodoModel } from '../models';
 // import useAsync from '../hooks/useAsync';
 // import { addTodo, TodoContext } from '../screens/Todos'
 import { useTodos } from '../screens/Todos'
+import FullPageSpinner from './FullPageSpinner';
 
 function TodoInput() {
   const { todos,
@@ -59,7 +60,7 @@ function TodoInput() {
   // }
   return (
     <Form>
-      {status === 'pending' ? "Loading..." : (
+      {status === 'pending' ? <FullPageSpinner /> : (
         <>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="title">

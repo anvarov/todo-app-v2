@@ -12,7 +12,7 @@ function FullPageSpinner() {
                 <p className='d-inline-block' style={{transform: 'scale(2)'}}>
                 <FaSpinner  className={styles.spinner} />
                 </p>
-                <ErrorFallback />
+                {/* <ErrorFallback /> */}
             </Col>
         </Row>
     )

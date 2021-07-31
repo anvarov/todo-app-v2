@@ -84,7 +84,7 @@ function Todos() {
                     <SearchInput />
                 </Row>
                 <Row>
-                    <h3>Todos</h3>
+                    <h3 style={{marginBottom: '10px'}}>Todos</h3>
                     <ol className='ml-4'>
                         <TodoItem />
                     </ol>

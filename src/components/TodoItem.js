@@ -12,6 +12,7 @@ import { DataStore } from '@aws-amplify/datastore';
 // import { useFormik } from 'formik'
 import { TodoModel } from '../models';
 import { useTodos } from '../screens/Todos'
+import FullPageSpinner from './FullPageSpinner'
 // import {deleteTodo, editTodo, setTodos } from '../screens/Todos'
 
 function TodoItem() {
@@ -123,11 +124,13 @@ function TodoItem() {
     // console.log(filteredTodos, 'ftodos')
     console.log(todos, 'todos')
     return (status === 'resolved' && filteredTodos.length !== 0) ? filteredTodos.map(todo => (
-        <li key={todo.id}>
-            {status === 'pending' ? "Loading..." : (<>
+
+        <li key={todo.id} style={{marginLeft: '20px'}}>
+            <Col>
+            {status === 'pending' ? <FullPageSpinner /> : (<>
                 <Row className='justify-content-space-between'>
                     <Col>
-                        <p>{todo.title}</p>
+                        <h4>{todo.title}</h4>
                     </Col>
                     <Col className='d-flex justify-content-start align-items-end flex-column'>
                         {
@@ -173,7 +176,9 @@ function TodoItem() {
                     </Col>
                 </Row>
             </>)}
+            </Col>
         </li>
+
     )) : <p>No todos</p>
 }
 
