@@ -3,6 +3,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import { AiOutlineSearch } from 'react-icons/ai'
+import {MdClear} from 'react-icons/md'
 import { useFormik } from 'formik'
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
@@ -13,7 +14,7 @@ import { useTodos } from '../screens/Todos'
 
 
 function SearchInput() {
-    const {dispatch} = useTodos()
+    const {dispatch, filters} = useTodos()
     function handleSearch({searchTerm, status}){
         console.log('inside handlesea')
         dispatch({filters: {searchTerm, endDate: null, startDate: null, status}})
@@ -46,6 +47,7 @@ function SearchInput() {
         <>
 
             <InputGroup>
+                {/* <Form> */}
                 <FormControl placeholder='Search for todos'
                     aria-label='search-todos'
                     type='text'
@@ -53,20 +55,29 @@ function SearchInput() {
                     name='searchTerm'
                     onChange={formik.handleChange}
                 />
-                {/* <InputGroup.Text id='searchIcon'> */}
+                {/* <button style={{backgroundColor: 'white', border: 'none'}}>Reset</button> */}
                 <Button variant='outline-secondary' onClick={() => showFilters(state => !state)}>Filters</Button>
-                <Button variant='outline-primary' onClick={() => handleSearch(formik.values)} >
-                    <AiOutlineSearch />
+                
+                {
+                    //eslint-disable-next-line
+                filters.searchTerm?.length > 0  ? 
+                <Button variant='outline-danger' onClick={() => {
+                    formik.resetForm()
+                    handleSearch({searchTerm: ''})
+                    }}>
+                    Reset
                 </Button>
-                {/* </InputGroup.Text> */}
-
+                :
+                 <Button variant='outline-primary' onClick={() => handleSearch(formik.values)}>
+                    Search
+                </Button>
+                }
             </InputGroup>
             <Form>
                 {isFiltersShown ? (
                     <Row className='mt-3'>
                         <Col xs={4}>
                             <Form.Group>
-
                                 <Form.Label>Status</Form.Label>
                                 <Form.Select
                                 onChange={formik.handleChange}

@@ -71,7 +71,7 @@ function Todos() {
         <div>
             <TodoContext.Provider value={value}>
                 <Row className='mb-3'>
-                    <Accordion className='my-3' defaultActiveKey="0">
+                    <Accordion className='my-3'>
                         <Accordion.Item eventKey="0">
                             <Accordion.Header>Add Todo</Accordion.Header>
                             <Accordion.Body>
