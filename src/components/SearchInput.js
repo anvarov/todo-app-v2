@@ -16,13 +16,12 @@ import { useTodos } from '../screens/Todos'
 function SearchInput() {
     const {dispatch, filters} = useTodos()
     function handleSearch({searchTerm, status}){
-        console.log('inside handlesea')
         dispatch({filters: {searchTerm, endDate: null, startDate: null, status}})
     }
     function handleCancel(){
         showFilters(false); 
         formik.resetForm();
-        dispatch({filters: {status: 0}})
+        dispatch({filters: {}})
     }
     const formik = useFormik({
         initialValues: {
@@ -56,7 +55,11 @@ function SearchInput() {
                     onChange={formik.handleChange}
                 />
                 {/* <button style={{backgroundColor: 'white', border: 'none'}}>Reset</button> */}
-                <Button variant='outline-secondary' onClick={() => showFilters(state => !state)}>Filters</Button>
+                {
+                    Object.keys(filters).length > 0 ? <Button
+                    variant='outline-danger' onClick={() => dispatch({filters:{}})}>Reset</Button> : <Button variant='outline-secondary' onClick={() => showFilters(state => !state)}>Filters</Button>
+
+                }
                 
                 {
                     //eslint-disable-next-line

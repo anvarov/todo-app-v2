@@ -83,6 +83,7 @@ function TodoItem() {
   }, [dispatch]);
  
   const filteredTodos = todos.filter((todo) => {
+    const isStatusMatch = filters.status ? filters.status === todo.status : true
     const isBeforeEndDate = filters.endDate
       ? isBefore(parseISO(todo.dueDate), parseISO(filters.endDate))
       : true;
@@ -92,7 +93,7 @@ function TodoItem() {
     const isSearchMatch = filters.searchTerm
       ? todo.title.includes(filters.searchTerm.toLowerCase())
       : true;
-    return isBeforeEndDate && isSearchMatch && isAfterStartDate;
+    return isBeforeEndDate && isSearchMatch && isAfterStartDate && isStatusMatch;
   });
 
   return status === "resolved" && filteredTodos.length !== 0 ? (
@@ -156,6 +157,7 @@ function TodoItem() {
                     </Spinner>
                   ) : null}
                   <Button
+                    disabled={status === 'pending'}
                     variant="info"
                     onClick={(e) =>
                       editTodoAsync(todo, { target: { name: "status" } })
@@ -168,6 +170,7 @@ function TodoItem() {
 
                   {editTodoId === todo.id ? (
                     <Button
+                      disabled={status === 'pending'}
                       className="m-2"
                       variant="primary"
                       onClick={(e) => {
@@ -181,6 +184,7 @@ function TodoItem() {
                     </Button>
                   ) : (
                     <Button
+                      disabled={status === 'pending'}
                       className="m-2"
                       variant="secondary"
                       onClick={() => setEditTodoId(todo.id)}
@@ -189,6 +193,7 @@ function TodoItem() {
                     </Button>
                   )}
                   <Button
+                    disabled={status === 'pending'}
                     variant="danger"
                     onClick={() => deleteTodoAsync(todo.id)}
                   >
