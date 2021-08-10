@@ -17,12 +17,7 @@ function AuthForm({ type }) {
   const [show, setShow] = React.useState(false)
   const { register, login, error, status, user } = useAuth()
   const history = useHistory()
-  // React.useEffect(() => {
-  //   console.log(user, 'useeeffect')
-  //   if (user){
-  //     <Redirect to='/dashboard' />
-  //   }
-  // }, [user])
+  
   function handleDemoLogin(e) {
     e.preventDefault()
     login({ username: 'demoUser', password: 123456 })
@@ -41,7 +36,7 @@ function AuthForm({ type }) {
       password: Yup.string().required('Password is required')
         .when('type', {
           is: 'register',
-          then: Yup.string().min(5, 'Must be at least 6 characters'),
+          then: Yup.string().min(6, 'Must be at least 6 characters'),
         }),
       confirmPassword: Yup.string()
         .when('type', {
@@ -53,7 +48,9 @@ function AuthForm({ type }) {
         })
     }),
     onSubmit: values => {
+      console.log(formik.values.type, 'form type')
       if (formik.values.type === 'login') {
+        // console.log(type, 'type auth form')
         login(values)
           .then(user => history.push('/dashboard'))
           .catch(error => {
@@ -61,6 +58,7 @@ function AuthForm({ type }) {
             setShow(true)
           })
       } else {
+        // console.log(values, 'register')
         register(values)
           .then(user => history.push('/dashboard'))
           .catch(
@@ -154,7 +152,7 @@ function AuthForm({ type }) {
                 Demo Login
               </Button>
               <Link to='/register'>
-                <Button>Create Account</Button>
+                <Button onClick={e => formik.values.type = 'register'}>Create Account</Button>
               </Link>
             </>
             : <Link to='/login'>

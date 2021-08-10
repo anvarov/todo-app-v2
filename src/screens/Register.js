@@ -5,7 +5,7 @@ import AuthForm from '../components/AuthForm';
 
 export default function Register() {
   return (
-    <Row className='py-5'>
+    <Row className='p-5'>
       <Logo />
       <AuthForm type="register" />
     </Row>

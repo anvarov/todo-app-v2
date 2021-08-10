@@ -11,22 +11,12 @@ import Todos from "./Todos";
 
 function Dashboard() {
   const { logout, user } = useAuth();
-  // const initialState = React.useRef({isLoading: true, currentUser: null});
-  // const [{isLoading, currentUser}, dispatch] = React.useReducer((s, a) => ({...s, ...a}), initialState.current)
-  // const [filters, setFilters] = React.useState({})
   const history = useHistory();
-  // const {logout, getCurrentUser} = useAuth()
   function handleLogout() {
     logout();
     history.push("/login");
   }
-  // React.useEffect(() => {
-  //   (async () => {
-  //     const user = await getCurrentUser()
-  //     dispatch({isLoading: false, currentUser: user})
-  //   }
-  //   )()
-  // }, [getCurrentUser, dispatch])
+
   return user ? (
     <Container>
       <Row className="my-3 align-items-center">

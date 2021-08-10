@@ -9,7 +9,7 @@ import Logo from './components/Logo'
 import Dashboard from './screens/Dashboard';
 import { BrowserRouter as Router, Switch, Route  } from 'react-router-dom'
 import { AuthProvider } from './context/AuthProvider';
-import PrivateRoute from './components/PrivateRoute';
+// import PrivateRoute from './components/PrivateRoute';
 // import App from './components/App'
 // import FullPageSpinner from './components/FullPageSpinner';
 import 'bootstrap/dist/css/bootstrap.min.css';
